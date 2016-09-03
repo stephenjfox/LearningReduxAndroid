@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.widget.DrawerLayout
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import com.brianegan.bansaDevToolsUi.BansaDevToolsPresenter
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
 
@@ -30,6 +31,9 @@ abstract class RenderableDrawerLayout : DrawerLayout, Anvil.Renderable {
 
   abstract override fun view()
 }
+
+
+val devToolsPresent = BansaDevToolsPresenter<ApplicationState>(mainStore)
 
 fun counterView(model: CounterViewModel) {
   
@@ -61,6 +65,23 @@ fun counterView(model: CounterViewModel) {
       padding(dip(10))
       margin(dip(12), 0)
       onClick(decrement)
+    }
+  }
+}
+
+fun counterDebugScreen(counterModel: CounterViewModel) {
+  scrollView {
+    relativeLayout {
+      counterView(counterModel)
+
+      xml(R.layout.bansa_dev_tools) {
+        below(R.id.counter_view)
+
+        init {
+          devToolsPresent.unbind()
+          devToolsPresent.bind(Anvil.currentView())
+        }
+      }
     }
   }
 }

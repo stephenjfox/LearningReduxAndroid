@@ -2,10 +2,11 @@ package com.stephenjfox.learningbansa
 
 import android.view.View
 import com.brianegan.bansa.Action
-import com.brianegan.bansa.BaseStore
 import com.brianegan.bansa.Reducer
+import com.brianegan.bansaDevTools.DevToolsStore
 
 /**
+ * Data driven elements that coax the problem of data
  * Created by Stephen on 9/2/2016.
  */
 data class ApplicationState(var counter: Int = 0)
@@ -30,7 +31,7 @@ class CounterReducer : Reducer<ApplicationState> {
 /**
  * The main data store for the application
  */
-val mainStore = BaseStore<ApplicationState>(ApplicationState(), CounterReducer())
+val mainStore = DevToolsStore<ApplicationState>(ApplicationState(), CounterReducer())
 
 
 /**

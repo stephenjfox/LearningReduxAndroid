@@ -17,7 +17,7 @@ class RootCounterView(context: Context, val dataStore: Store<ApplicationState>)
   var subscription: Subscription? = null
 
   override fun view() {
-    counterView(buildViewModel())
+    counterDebugScreen(buildViewModel())
   }
 
   override fun onAttachedToWindow() {
