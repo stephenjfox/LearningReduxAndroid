@@ -7,7 +7,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(RootCounterView(this, mainStore))
+    setContentView(RootView(this, store))
   }
   /**
    * With these first three commits, do I now know enough to create a calculator?

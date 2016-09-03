@@ -9,6 +9,6 @@ class MainApp : android.app.Application() {
   override fun onCreate() {
     super.onCreate()
 
-    mainStore.dispatch(StateActions.INIT())
+    store.dispatch(StateTransforms.INIT())
   }
 }
