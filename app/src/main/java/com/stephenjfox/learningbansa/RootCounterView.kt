@@ -2,13 +2,13 @@ package com.stephenjfox.learningbansa
 
 import android.content.Context
 import android.view.View
-import android.widget.LinearLayout
 import com.brianegan.bansa.Store
 import com.brianegan.bansa.Subscription
 import trikita.anvil.Anvil
-import trikita.anvil.DSL.*
 
 /**
+ * Practical copy-paste of Brian's, but I'm still learning
+ * todo: change this comment to be useful
  * Created by Stephen on 9/2/2016.
  */
 class RootCounterView(context: Context, val dataStore: Store<ApplicationState>)
@@ -17,30 +17,7 @@ class RootCounterView(context: Context, val dataStore: Store<ApplicationState>)
   var subscription: Subscription? = null
 
   override fun view() {
-    linearLayout {
-      size(FILL, WRAP)
-      orientation(LinearLayout.VERTICAL)
-
-      textView {
-        text("Counts: ${dataStore.state.counter}")
-      }
-
-      button {
-        text("+")
-        padding(dip(10))
-        onClick {
-          dataStore.dispatch(StateActions.INCREMENT)
-        }
-      }
-
-      button {
-        text("-")
-        padding(dip(10))
-        onClick {
-          dataStore.dispatch(StateActions.DECREMENT)
-        }
-      }
-    }
+    counterView(buildViewModel())
   }
 
   override fun onAttachedToWindow() {
@@ -70,11 +47,4 @@ class RootCounterView(context: Context, val dataStore: Store<ApplicationState>)
         incrementHandle = increment,
         decrementHandle = decrement)
   }
-
-  /**
-   * pass-through for the presentation layer
-   */
-  data class CounterViewModel(val count: Int,
-                              val incrementHandle: OnClickListener,
-                              val decrementHandle: OnClickListener)
 }

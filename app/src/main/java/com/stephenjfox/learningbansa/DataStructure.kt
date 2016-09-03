@@ -1,5 +1,6 @@
 package com.stephenjfox.learningbansa
 
+import android.view.View
 import com.brianegan.bansa.Action
 import com.brianegan.bansa.BaseStore
 import com.brianegan.bansa.Reducer
@@ -30,3 +31,11 @@ class CounterReducer : Reducer<ApplicationState> {
  * The main data store for the application
  */
 val mainStore = BaseStore<ApplicationState>(ApplicationState(), CounterReducer())
+
+
+/**
+ * pass-through for the presentation layer
+ */
+data class CounterViewModel(val count: Int,
+                            val incrementHandle: View.OnClickListener,
+                            val decrementHandle: View.OnClickListener)
