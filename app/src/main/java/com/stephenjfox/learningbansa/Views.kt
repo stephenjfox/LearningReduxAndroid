@@ -8,7 +8,9 @@ import com.brianegan.bansaDevToolsUi.BansaDevToolsPresenter
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
 
-
+/**
+ * Base class that handles essential lifecycle hooks for us
+ */
 abstract class RenderableDrawerLayout : DrawerLayout, Anvil.Renderable {
 
   constructor(context: Context) : super(context)
@@ -19,6 +21,9 @@ abstract class RenderableDrawerLayout : DrawerLayout, Anvil.Renderable {
               attrs: AttributeSet,
               defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
+  /**
+   * This is the Android-Anvil lifecycle hook that I've missed in the past
+   */
   public override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     Anvil.mount(this, this)
@@ -35,14 +40,13 @@ abstract class RenderableDrawerLayout : DrawerLayout, Anvil.Renderable {
 
 val devToolsPresent = BansaDevToolsPresenter<ApplicationState>(mainStore)
 
-fun counterView(model: CounterViewModel) {
+fun counterTemplate(model: CounterViewModel) {
   
   val (count, increment, decrement) = model
   
   linearLayout {
     size(FILL, WRAP)
     orientation(LinearLayout.VERTICAL)
-    id(R.id.counter_view)
 
     textView {
       text(count.toString())
@@ -69,13 +73,21 @@ fun counterView(model: CounterViewModel) {
   }
 }
 
-fun counterDebugScreen(counterModel: CounterViewModel) {
+/**
+ * Inserts [models] transformed into a [counterTemplate]
+ * just above the timeTravel debugger
+ */
+fun counterDebugScreen(models: List<CounterViewModel>) {
   scrollView {
-    relativeLayout {
-      counterView(counterModel)
+    linearLayout {
+      orientation(LinearLayout.VERTICAL)
+      id(R.id.counter_view)
+
+      models.forEach { counterModel ->
+        counterTemplate(counterModel)
+      }
 
       xml(R.layout.bansa_dev_tools) {
-        below(R.id.counter_view)
 
         init {
           devToolsPresent.unbind()

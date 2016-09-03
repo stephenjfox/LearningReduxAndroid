@@ -5,6 +5,7 @@ import android.view.View
 import com.brianegan.bansa.Store
 import com.brianegan.bansa.Subscription
 import trikita.anvil.Anvil
+import java.util.UUID
 
 /**
  * Practical copy-paste of Brian's, but I'm still learning
@@ -17,7 +18,9 @@ class RootCounterView(context: Context, val dataStore: Store<ApplicationState>)
   var subscription: Subscription? = null
 
   override fun view() {
-    counterDebugScreen(buildViewModel())
+    counterDebugScreen(dataStore.state.counters.keys.map { id ->
+      buildViewModel(id)
+    })
   }
 
   override fun onAttachedToWindow() {
@@ -33,17 +36,18 @@ class RootCounterView(context: Context, val dataStore: Store<ApplicationState>)
     subscription?.unsubscribe()
   }
 
-  val increment = View.OnClickListener {
-    dataStore.dispatch(StateActions.INCREMENT)
-  }
+  fun buildViewModel(id: UUID): CounterViewModel {
 
-  val decrement = View.OnClickListener {
-    dataStore.dispatch(StateActions.DECREMENT)
-  }
+    val increment = View.OnClickListener {
+      dataStore.dispatch(StateActions.INCREMENT(id))
+    }
 
-  fun buildViewModel(): CounterViewModel {
+    val decrement = View.OnClickListener {
+      dataStore.dispatch(StateActions.DECREMENT(id))
+    }
+
     return CounterViewModel(
-        count = dataStore.state.counter,
+        count = dataStore.state.counters[id]!!,
         incrementHandle = increment,
         decrementHandle = decrement)
   }
