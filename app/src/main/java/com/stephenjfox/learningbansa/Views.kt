@@ -38,8 +38,11 @@ abstract class RenderableDrawerLayout : DrawerLayout, Anvil.Renderable {
 }
 
 
-val devToolsPresent = BansaDevToolsPresenter<ApplicationState>(mainStore)
+val devToolsPresenter = BansaDevToolsPresenter<ApplicationState>(mainStore)
 
+/**
+ *
+ */
 fun counterTemplate(model: CounterViewModel) {
   
   val (count, increment, decrement) = model
@@ -77,7 +80,7 @@ fun counterTemplate(model: CounterViewModel) {
  * Inserts [models] transformed into a [counterTemplate]
  * just above the timeTravel debugger
  */
-fun counterDebugScreen(models: List<CounterViewModel>) {
+fun drawCounterScreen(models: List<CounterViewModel>, withDebugger: Boolean = true) {
   scrollView {
     linearLayout {
       orientation(LinearLayout.VERTICAL)
@@ -87,11 +90,13 @@ fun counterDebugScreen(models: List<CounterViewModel>) {
         counterTemplate(counterModel)
       }
 
-      xml(R.layout.bansa_dev_tools) {
+      if (withDebugger) {
+        xml(R.layout.bansa_dev_tools) {
 
-        init {
-          devToolsPresent.unbind()
-          devToolsPresent.bind(Anvil.currentView())
+          init {
+            devToolsPresenter.unbind()
+            devToolsPresenter.bind(Anvil.currentView())
+          }
         }
       }
     }
