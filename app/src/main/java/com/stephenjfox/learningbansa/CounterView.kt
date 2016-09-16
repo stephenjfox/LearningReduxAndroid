@@ -1,5 +1,6 @@
 package com.stephenjfox.learningbansa
 
+import android.graphics.Color
 import android.view.View
 import android.widget.LinearLayout
 import com.brianegan.bansa.Action
@@ -14,12 +15,25 @@ import trikita.anvil.DSL.*
  */
 
 fun counterView(model: CounterViewModel) {
-  val (counter, increment, decrement) = model
+  val (counter, increment, decrement, toggleColor, selected) = model
 
   linearLayout {
     size(FILL, WRAP)
     orientation(LinearLayout.HORIZONTAL)
     margin(0, dip(10))
+
+    backgroundColor(if (selected) {
+      Color.CYAN
+    } else {
+      Color.TRANSPARENT
+    })
+
+    onClick(toggleColor)
+
+    onLongClick { view ->
+      // TODO: transition to the single-counter view (from v1)
+      true
+    }
 
     textView {
       size(0, WRAP)
@@ -49,6 +63,7 @@ sealed class StateTransforms {
   object REMOVE : Action
   data class INCREMENT(val id: UUID) : Action
   data class DECREMENT(val id: UUID) : Action
+  data class SELECT(val id: UUID) : Action
 }
 
 /**
@@ -65,7 +80,11 @@ fun buildInteractiveCounterViewModel(store: Store<ApplicationState>): (Counter) 
       store.dispatch(StateTransforms.DECREMENT(id))
     }
 
-    CounterViewModel(value, increment, decrement)
+    val toggleSelected = View.OnClickListener {
+      store.dispatch(StateTransforms.SELECT(id))
+    }
+
+    CounterViewModel(value, increment, decrement, toggleSelected, counter.selected)
   }
 }
 
@@ -74,4 +93,6 @@ fun buildInteractiveCounterViewModel(store: Store<ApplicationState>): (Counter) 
  */
 data class CounterViewModel(val counter: Int,
                             val incrementer: View.OnClickListener,
-                            val decrementer: View.OnClickListener)
+                            val decrementer: View.OnClickListener,
+                            val toggleSelect: View.OnClickListener,
+                            val selected: Boolean)

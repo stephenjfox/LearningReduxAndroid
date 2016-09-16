@@ -20,4 +20,16 @@ class MainActivity : AppCompatActivity() {
    *
    * Re-watch this: [Clean architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg)
    */
+
+  /**
+   * Currently (2016-9-3) the list view is done with an Android "ListView", which is discouraged.
+   * I would like to implement with a Recycler view, but I don't know if Anvil supports it
+   */
+
+  /**
+   * 2016-9-15
+   * Took me a few minutes to remember how the state reducers worked. I think I should use a different
+   * reducer for each level of abstraction: one for the counter-list-representation, one for the
+   * Counter-tier of abstraction. Maybe Dan Abrahmov has an explanation on which is better practice
+   */
 }

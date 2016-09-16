@@ -41,7 +41,7 @@ class RootView(c: Context, store: Store<ApplicationState>) : RenderableView(c) {
 
   val mapCounterToViewModel = buildInteractiveCounterViewModel(store)
 
-  val simpleAdapter = CounterAdapter<Counter, CounterViewModel>(
+  val simpleAdapter: CounterAdapter<Counter, CounterViewModel> = CounterAdapter(
       listOf(),
       mapCounterToViewModel,
       RenderableAdapter.Item { index, counterViewModel -> counterView(counterViewModel) }

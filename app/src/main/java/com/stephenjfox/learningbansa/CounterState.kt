@@ -13,7 +13,7 @@ import java.util.ArrayList
  */
 data class ApplicationState(val counters: List<Counter> = listOf())
 
-data class Counter(val id: UUID = UUID.randomUUID(), val value: Int = 0)
+data class Counter(val id: UUID = UUID.randomUUID(), val value: Int = 0, val selected: Boolean = false)
 
 val store = BaseStore<ApplicationState>(ApplicationState(), CounterReducer())
 
@@ -24,29 +24,37 @@ val store = BaseStore<ApplicationState>(ApplicationState(), CounterReducer())
  * Considering implementing lazy Sequences (but I'm not sure that will work)
  */
 class CounterReducer : Reducer<ApplicationState> {
-  override fun reduce(state: ApplicationState, action: Action): ApplicationState {
-    return when (action) {
-      is StateTransforms.INIT -> action.state
+  override fun reduce(state: ApplicationState, action: Action): ApplicationState = when (action) {
+    is StateTransforms.INIT -> action.state
 
-      is StateTransforms.REMOVE -> state.copy(counters = state.counters.dropLast(1))
+    is StateTransforms.REMOVE -> state.copy(counters = state.counters.filter {
+      !it.selected
+    })
 
-      is StateTransforms.ADD -> state.copy(counters = state.counters + action.counter)
+    is StateTransforms.ADD -> state.copy(counters = state.counters + action.counter)
 
-      is StateTransforms.INCREMENT -> state.copy(counters = state.counters.map {
-        when {
-          it.id.equals(action.id) -> it.copy(value = it.value + 1)
-          else -> it
-        }
-      })
+    is StateTransforms.INCREMENT -> state.copy(counters = state.counters.map {
+      when {
+        it.id.equals(action.id) -> it.copy(value = it.value + 1)
+        else -> it
+      }
+    })
 
-      is StateTransforms.DECREMENT -> state.copy(counters = state.counters.map {
-        when {
-          it.id.equals(action.id) -> it.copy(value = it.value - 1)
-          else -> it
-        }
-      })
-      else -> state
-    }
+    is StateTransforms.DECREMENT -> state.copy(counters = state.counters.map {
+      when {
+        it.id.equals(action.id) -> it.copy(value = it.value - 1)
+        else -> it
+      }
+    })
+
+    is StateTransforms.SELECT -> state.copy(counters = state.counters.map {
+      when {
+        it.id.equals(action.id) -> it.copy(selected = true)
+        else -> it.copy(selected = false)
+      }
+    })
+
+    else -> state
   }
 
 }
